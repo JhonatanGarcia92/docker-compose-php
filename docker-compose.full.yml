@@ -1,0 +1,57 @@
+version: '2.2'
+services:
+  nginx:
+    extends:
+      file: ./nginx/docker-compose.yml
+      service: nginx
+    networks:
+        - nginx
+    volumes:
+        - ./nginx/config/nginx.conf:/etc/nginx/nginx.conf
+        - ./nginx/config/app.vhost:/etc/nginx/conf.d/app.vhost
+        - ./nginx/Logs/Nginx:/var/log/nginx
+        - "${COMPOSE_PROJECT_PATH}:/var/www/html"
+    ports:
+        - "80:80"
+        - "443:443"
+
+  php:
+    extends:
+      file: ./php/docker-compose.yml
+      service: php
+    networks:
+        - nginx
+        - redis
+    volumes:
+        - "${COMPOSE_PROJECT_PATH}:/var/www/html"
+        - ./php/conf.d/custom_php.ini:/usr/local/etc/php/conf.d/custom_php.ini
+        - ./php/supervisor/conf.d/laravel-worker.conf:/etc/supervisor/conf.d/laravel-worker.conf
+
+  postgres:
+    extends:
+      file: ./postgres/docker-compose.yml
+      service: postgres
+    networks:
+        - db
+    ports:
+        - "5432:5432"
+    environment:
+        - POSTGRES_PASSWORD=postgres
+    volumes:
+        - ./postgres/var/lib/postgres:/var/lib/postgres
+
+  redis:
+    extends:
+        file: ./redis/docker-compose.yml
+        service: redis
+    networks:
+        - redis
+    volumes:
+        - ./redis/config/redis.conf:/usr/local/etc/redis.conf
+    ports:
+        - "6379:6379"
+
+networks:
+  nginx:
+  db:
+  redis:

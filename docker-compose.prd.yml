@@ -1,0 +1,24 @@
+version: '2.2'
+services:
+    nginx:
+        extends:
+            file: ./docker-compose.full.yml
+            service: nginx
+        depends_on:
+            - "php"
+    php:
+        extends:
+            file: ./docker-compose.full.yml
+            service: php
+        networks:
+            - nginx
+            - redis
+        depends_on:
+            - "redis"
+    redis:
+        extends:
+            file: ./docker-compose.full.yml
+            service: redis
+networks:
+    nginx:
+    redis:

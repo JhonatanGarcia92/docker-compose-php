@@ -1,0 +1,6 @@
+.DS_Store
+nginx/.DS_Store
+php/.DS_Store
+php/supervisor/.DS_Store
+.idea
+nginx/Logs/
