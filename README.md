@@ -21,7 +21,7 @@ To create a new database in postgres, you need the following:
 
 ```
 $ make psql-project
-$ psql -U posgtres
+$ psql -U postgres
 $ create database database_name;
 $ exit;
 $ \q
